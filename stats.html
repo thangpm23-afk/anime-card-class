@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Stats</title>
+<style>
+  body { font-family: Arial; padding: 15px; }
+  label { display: inline-block; width: 130px; margin-top: 5px; }
+  input { width: 100px; padding: 5px; margin: 5px 0; }
+  button { padding: 7px 15px; margin: 10px 0; }
+  pre { background: #eee; padding: 10px; border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<h2>Chỉ số Nhân Vật Theo Tier</h2>
+<label>DMG cơ bản:</label> <input type="number" id="basicDmg" value="10"><br>
+<label>Cấp hiện tại:</label> <input type="number" id="level" value="1" min="1"><br>
+<button onclick="calcStats()">Tính chỉ số</button>
+<pre id="resultStats"></pre>
+
+<script>
+function calcStats() {
+    let dmg = parseFloat(document.getElementById("basicDmg").value);
+    let level = parseInt(document.getElementById("level").value);
+    if (level < 1) level = 1;
+
+    let multiplier = Math.pow(1 + 0.0125, level - 1);
+    let basicDmgLevel = Math.round(dmg * multiplier);
+    let basicHpLevel  = basicDmgLevel * 2;
+
+    let goldDmg    = basicDmgLevel * 4;
+    let goldHp     = basicHpLevel * 4;
+    let rainbowDmg = goldDmg * 4;
+    let rainbowHp  = goldHp * 4;
+    let secretDmg  = rainbowDmg * 4;
+    let secretHp   = rainbowHp * 4;
+
+    document.getElementById("resultStats").innerText =
+`📌 Basic → DMG: ${basicDmgLevel}, HP: ${basicHpLevel}
+✨ Gold → DMG: ${goldDmg}, HP: ${goldHp}
+🌈 Rainbow → DMG: ${rainbowDmg}, HP: ${rainbowHp}
+🔥 Secret → DMG: ${secretDmg}, HP: ${secretHp}`;
+}
+</script>
+
+</body>
+</html>
