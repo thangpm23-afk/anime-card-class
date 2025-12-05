@@ -2,45 +2,154 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Stats</title>
+<title>Stats 4 Card</title>
 <style>
-  body { font-family: Arial; padding: 15px; }
-  label { display: inline-block; width: 130px; margin-top: 5px; }
-  input { width: 100px; padding: 5px; margin: 5px 0; }
+  body { font-family: Arial; max-width: 700px; margin: 20px auto; padding: 10px; }
+  label { display: inline-block; width: 160px; margin-top: 5px; }
+  input, select { width: 120px; padding: 5px; margin: 5px 0; }
   button { padding: 7px 15px; margin: 10px 0; }
-  pre { background: #eee; padding: 10px; border-radius: 5px; }
+  pre { background: #eee; padding: 10px; border-radius: 5px; white-space: pre-wrap; }
+  .card-input { margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
 </style>
 </head>
 <body>
 
 <h2>Chỉ số Nhân Vật Theo Tier</h2>
-<label>DMG cơ bản:</label> <input type="number" id="basicDmg" value="10"><br>
-<label>Cấp hiện tại:</label> <input type="number" id="level" value="1" min="1"><br>
-<button onclick="calcStats()">Tính chỉ số</button>
-<pre id="resultStats"></pre>
+
+<!-- Card Thường -->
+<div class="card-input">
+  <h3>Card Thường (start level 0)</h3>
+  <label>DMG cơ bản:</label> <input type="number" id="dmgCommon" value="2110"><br>
+  <label>Cấp hiện tại:</label> <input type="number" id="levelCommon" value="100" min="0"><br>
+  <label>Trait:</label>
+  <select id="traitCommon">
+    <option value="1">Không có</option>
+    <option value="1.75">One Above All</option>
+    <option value="1.5">Overlord</option>
+    <option value="1.3">Blessed</option>
+    <option value="1.2">Monarch</option>
+    <option value="1.12">Divine</option>
+    <option value="1.12">Almighty</option>
+  </select><br>
+  <button onclick="calcCard('Common')">Tính Card Thường</button>
+  <pre id="resultCommon"></pre>
+</div>
+
+<!-- Card Quest -->
+<div class="card-input">
+  <h3>Card Quest (start level 50)</h3>
+  <label>DMG cơ bản:</label> <input type="number" id="dmgQuest" value="2110"><br>
+  <label>Cấp hiện tại:</label> <input type="number" id="levelQuest" value="100" min="50"><br>
+  <label>Trait:</label>
+  <select id="traitQuest">
+    <option value="1">Không có</option>
+    <option value="1.75">One Above All</option>
+    <option value="1.5">Overlord</option>
+    <option value="1.3">Blessed</option>
+    <option value="1.2">Monarch</option>
+    <option value="1.12">Divine</option>
+    <option value="1.12">Almighty</option>
+  </select><br>
+  <button onclick="calcCard('Quest')">Tính Card Quest</button>
+  <pre id="resultQuest"></pre>
+</div>
+
+<!-- Card Tower Story -->
+<div class="card-input">
+  <h3>Card Tower Story (start level 75)</h3>
+  <label>DMG cơ bản:</label> <input type="number" id="dmgTower" value="2110"><br>
+  <label>Cấp hiện tại:</label> <input type="number" id="levelTower" value="100" min="75"><br>
+  <label>Trait:</label>
+  <select id="traitTower">
+    <option value="1">Không có</option>
+    <option value="1.75">One Above All</option>
+    <option value="1.5">Overlord</option>
+    <option value="1.3">Blessed</option>
+    <option value="1.2">Monarch</option>
+    <option value="1.12">Divine</option>
+    <option value="1.12">Almighty</option>
+  </select><br>
+  <button onclick="calcCard('Tower')">Tính Card Tower Story</button>
+  <pre id="resultTower"></pre>
+</div>
+
+<!-- Moon Card -->
+<div class="card-input">
+  <h3>Moon Card (start level 90)</h3>
+  <label>DMG cơ bản:</label> <input type="number" id="dmgMoon" value="2110"><br>
+  <label>Cấp hiện tại:</label> <input type="number" id="levelMoon" value="100" min="90"><br>
+  <label>Trait:</label>
+  <select id="traitMoon">
+    <option value="1">Không có</option>
+    <option value="1.75">One Above All</option>
+    <option value="1.5">Overlord</option>
+    <option value="1.3">Blessed</option>
+    <option value="1.2">Monarch</option>
+    <option value="1.12">Divine</option>
+    <option value="1.12">Almighty</option>
+  </select><br>
+  <button onclick="calcCard('Moon')">Tính Moon Card</button>
+  <pre id="resultMoon"></pre>
+</div>
 
 <script>
-function calcStats() {
-    let dmg = parseFloat(document.getElementById("basicDmg").value);
-    let level = parseInt(document.getElementById("level").value);
-    if (level < 1) level = 1;
+function calcCard(cardType) {
+    // Xác định thông số dựa theo cardType
+    let dmgBase, level, trait, startLevel, resultId;
+    switch(cardType){
+        case 'Common':
+            dmgBase = parseFloat(document.getElementById("dmgCommon").value);
+            level = parseInt(document.getElementById("levelCommon").value);
+            trait = parseFloat(document.getElementById("traitCommon").value);
+            startLevel = 0;
+            resultId = "resultCommon";
+            break;
+        case 'Quest':
+            dmgBase = parseFloat(document.getElementById("dmgQuest").value);
+            level = parseInt(document.getElementById("levelQuest").value);
+            trait = parseFloat(document.getElementById("traitQuest").value);
+            startLevel = 50;
+            resultId = "resultQuest";
+            break;
+        case 'Tower':
+            dmgBase = parseFloat(document.getElementById("dmgTower").value);
+            level = parseInt(document.getElementById("levelTower").value);
+            trait = parseFloat(document.getElementById("traitTower").value);
+            startLevel = 75;
+            resultId = "resultTower";
+            break;
+        case 'Moon':
+            dmgBase = parseFloat(document.getElementById("dmgMoon").value);
+            level = parseInt(document.getElementById("levelMoon").value);
+            trait = parseFloat(document.getElementById("traitMoon").value);
+            startLevel = 90;
+            resultId = "resultMoon";
+            break;
+    }
 
-    let multiplier = Math.pow(1 + 0.0125, level - 1);
-    let basicDmgLevel = Math.round(dmg * multiplier);
-    let basicHpLevel  = basicDmgLevel * 2;
+    // 1️⃣ Tăng tuyến tính theo cấp
+    let effectiveLevel = Math.max(0, level - startLevel);
+    let dmgAfterLevel = dmgBase + dmgBase * 0.0125 * effectiveLevel;
+    let hpAfterLevel = dmgAfterLevel * 2;
 
-    let goldDmg    = basicDmgLevel * 4;
-    let goldHp     = basicHpLevel * 4;
-    let rainbowDmg = goldDmg * 4;
-    let rainbowHp  = goldHp * 4;
-    let secretDmg  = rainbowDmg * 4;
-    let secretHp   = rainbowHp * 4;
+    // 2️⃣ Áp dụng Trait
+    dmgAfterLevel *= trait;
+    hpAfterLevel *= trait;
 
-    document.getElementById("resultStats").innerText =
-`📌 Basic → DMG: ${basicDmgLevel}, HP: ${basicHpLevel}
-✨ Gold → DMG: ${goldDmg}, HP: ${goldHp}
-🌈 Rainbow → DMG: ${rainbowDmg}, HP: ${rainbowHp}
-🔥 Secret → DMG: ${secretDmg}, HP: ${secretHp}`;
+    // 3️⃣ Tính các Tier
+    let tiers = {
+        basic: {dmg: Math.round(dmgAfterLevel), hp: Math.round(hpAfterLevel)},
+        gold: {dmg: Math.round(dmgAfterLevel*4), hp: Math.round(hpAfterLevel*4)},
+        rainbow: {dmg: Math.round(dmgAfterLevel*16), hp: Math.round(hpAfterLevel*16)},
+        secret: {dmg: Math.round(dmgAfterLevel*64), hp: Math.round(hpAfterLevel*64)}
+    };
+
+    // 4️⃣ Hiển thị kết quả
+    document.getElementById(resultId).innerText =
+`📌 Basic → DMG: ${tiers.basic.dmg}, HP: ${tiers.basic.hp}
+✨ Gold → DMG: ${tiers.gold.dmg}, HP: ${tiers.gold.hp}
+🌈 Rainbow → DMG: ${tiers.rainbow.dmg}, HP: ${tiers.rainbow.hp}
+🔥 Secret → DMG: ${tiers.secret.dmg}, HP: ${tiers.secret.hp}`;
 }
 </script>
 
