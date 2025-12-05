@@ -19,7 +19,7 @@
 <!-- Card Thường -->
 <div class="card-input">
   <h3>Card Thường (start level 0)</h3>
-  <label>DMG cơ bản:</label> <input type="number" id="dmgCommon" value="2110"><br>
+  <label>DMG cơ bản:</label> <input type="text" id="dmgCommon" value="2.11k"><br>
   <label>Cấp hiện tại:</label> <input type="number" id="levelCommon" value="100" min="0"><br>
   <label>Trait:</label>
   <select id="traitCommon">
@@ -38,7 +38,7 @@
 <!-- Card Quest -->
 <div class="card-input">
   <h3>Card Quest (start level 50)</h3>
-  <label>DMG cơ bản:</label> <input type="number" id="dmgQuest" value="2110"><br>
+  <label>DMG cơ bản:</label> <input type="text" id="dmgQuest" value="2.11k"><br>
   <label>Cấp hiện tại:</label> <input type="number" id="levelQuest" value="100" min="50"><br>
   <label>Trait:</label>
   <select id="traitQuest">
@@ -57,7 +57,7 @@
 <!-- Card Tower Story -->
 <div class="card-input">
   <h3>Card Tower Story (start level 75)</h3>
-  <label>DMG cơ bản:</label> <input type="number" id="dmgTower" value="2110"><br>
+  <label>DMG cơ bản:</label> <input type="text" id="dmgTower" value="2.11k"><br>
   <label>Cấp hiện tại:</label> <input type="number" id="levelTower" value="100" min="75"><br>
   <label>Trait:</label>
   <select id="traitTower">
@@ -76,7 +76,7 @@
 <!-- Moon Card -->
 <div class="card-input">
   <h3>Moon Card (start level 90)</h3>
-  <label>DMG cơ bản:</label> <input type="number" id="dmgMoon" value="2110"><br>
+  <label>DMG cơ bản:</label> <input type="text" id="dmgMoon" value="2.11k"><br>
   <label>Cấp hiện tại:</label> <input type="number" id="levelMoon" value="100" min="90"><br>
   <label>Trait:</label>
   <select id="traitMoon">
@@ -93,33 +93,44 @@
 </div>
 
 <script>
+// Hàm parse số từ chuỗi có k/m
+function parseNumber(input) {
+    input = input.toLowerCase().trim();
+    if(input.endsWith("k")) {
+        return parseFloat(input.slice(0,-1)) * 1000;
+    } else if(input.endsWith("m")) {
+        return parseFloat(input.slice(0,-1)) * 1000000;
+    } else {
+        return parseFloat(input);
+    }
+}
+
 function calcCard(cardType) {
-    // Xác định thông số dựa theo cardType
     let dmgBase, level, trait, startLevel, resultId;
     switch(cardType){
         case 'Common':
-            dmgBase = parseFloat(document.getElementById("dmgCommon").value);
+            dmgBase = parseNumber(document.getElementById("dmgCommon").value);
             level = parseInt(document.getElementById("levelCommon").value);
             trait = parseFloat(document.getElementById("traitCommon").value);
             startLevel = 0;
             resultId = "resultCommon";
             break;
         case 'Quest':
-            dmgBase = parseFloat(document.getElementById("dmgQuest").value);
+            dmgBase = parseNumber(document.getElementById("dmgQuest").value);
             level = parseInt(document.getElementById("levelQuest").value);
             trait = parseFloat(document.getElementById("traitQuest").value);
             startLevel = 50;
             resultId = "resultQuest";
             break;
         case 'Tower':
-            dmgBase = parseFloat(document.getElementById("dmgTower").value);
+            dmgBase = parseNumber(document.getElementById("dmgTower").value);
             level = parseInt(document.getElementById("levelTower").value);
             trait = parseFloat(document.getElementById("traitTower").value);
             startLevel = 75;
             resultId = "resultTower";
             break;
         case 'Moon':
-            dmgBase = parseFloat(document.getElementById("dmgMoon").value);
+            dmgBase = parseNumber(document.getElementById("dmgMoon").value);
             level = parseInt(document.getElementById("levelMoon").value);
             trait = parseFloat(document.getElementById("traitMoon").value);
             startLevel = 90;
@@ -127,16 +138,13 @@ function calcCard(cardType) {
             break;
     }
 
-    // 1️⃣ Tăng tuyến tính theo cấp
     let effectiveLevel = Math.max(0, level - startLevel);
     let dmgAfterLevel = dmgBase + dmgBase * 0.0125 * effectiveLevel;
     let hpAfterLevel = dmgAfterLevel * 2;
 
-    // 2️⃣ Áp dụng Trait
     dmgAfterLevel *= trait;
     hpAfterLevel *= trait;
 
-    // 3️⃣ Tính các Tier
     let tiers = {
         basic: {dmg: Math.round(dmgAfterLevel), hp: Math.round(hpAfterLevel)},
         gold: {dmg: Math.round(dmgAfterLevel*4), hp: Math.round(hpAfterLevel*4)},
@@ -144,7 +152,6 @@ function calcCard(cardType) {
         secret: {dmg: Math.round(dmgAfterLevel*64), hp: Math.round(hpAfterLevel*64)}
     };
 
-    // 4️⃣ Hiển thị kết quả
     document.getElementById(resultId).innerText =
 `📌 Basic → DMG: ${tiers.basic.dmg}, HP: ${tiers.basic.hp}
 ✨ Gold → DMG: ${tiers.gold.dmg}, HP: ${tiers.gold.hp}
