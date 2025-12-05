@@ -4,14 +4,11 @@
 <meta charset="UTF-8">
 <title>Anime Card Class — EXP & Stats</title>
 <style>
-  body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; display: flex; flex-direction: column; }
-  h2 { margin-bottom: 10px; }
+  body { font-family: Arial; max-width: 900px; margin: 20px auto; }
+  h1 { margin-bottom: 15px; }
   .container { display: flex; gap: 20px; flex-wrap: wrap; }
-  .box { flex: 1 1 400px; border: 1px solid #999; padding: 15px; border-radius: 8px; background: #f9f9f9; }
-  label { display: inline-block; width: 130px; margin-top: 5px; }
-  input { width: 100px; padding: 5px; margin: 5px 0; }
-  button { padding: 7px 15px; margin: 10px 0; }
-  pre { background: #eee; padding: 10px; border-radius: 5px; }
+  .box { flex: 1 1 400px; border: 1px solid #999; padding: 0; border-radius: 8px; background: #f9f9f9; height: 600px; }
+  iframe { width: 100%; height: 100%; border: none; }
 </style>
 </head>
 <body>
@@ -19,99 +16,16 @@
 <h1>Anime Card Class — EXP & Stats</h1>
 
 <div class="container">
-
-  <!-- EXP Box -->
+  <!-- Cột EXP -->
   <div class="box">
-    <h2>Tính EXP & Sử dụng Sách</h2>
-    <label>Cấp bắt đầu:</label> <input type="number" id="startLevel" value="0"><br>
-    <label>Cấp kết thúc:</label> <input type="number" id="endLevel" value="10"><br><br>
-
-    <h3>Sách bạn có:</h3>
-    <label>50 EXP:</label> <input type="number" id="book50" value="0"><br>
-    <label>100 EXP:</label> <input type="number" id="book100" value="0"><br>
-    <label>250 EXP:</label> <input type="number" id="book250" value="0"><br>
-    <label>500 EXP:</label> <input type="number" id="book500" value="0"><br>
-    <label>1000 EXP:</label> <input type="number" id="book1000" value="0"><br><br>
-
-    <button onclick="calculateEXP()">Tính EXP & Số sách</button>
-    <h3 id="result"></h3>
-    <h3 id="usedBooks"></h3>
+    <iframe src="exp.html"></iframe>
   </div>
 
-  <!-- Stats Box -->
+  <!-- Cột Stats -->
   <div class="box">
-    <h2>Chỉ số Nhân Vật Theo Tier</h2>
-    <label>DMG cơ bản:</label> <input type="number" id="basicDmg" value="10"><br>
-    <label>HP cơ bản:</label> <input type="number" id="basicHp" value="100"><br>
-    <label>Cấp hiện tại:</label> <input type="number" id="level" value="1" min="1"><br>
-    <button onclick="calcStats()">Tính chỉ số</button>
-    <pre id="resultStats"></pre>
+    <iframe src="stats.html"></iframe>
   </div>
-
 </div>
-
-<script>
-// === Tính EXP & sách ===
-function calculateEXP() {
-    const start = parseInt(document.getElementById('startLevel').value);
-    const end = parseInt(document.getElementById('endLevel').value);
-    if (isNaN(start) || isNaN(end) || end <= start) {
-        document.getElementById('result').innerText = "Vui lòng nhập cấp hợp lệ (cấp kết thúc > cấp bắt đầu).";
-        return;
-    }
-
-    let totalEXP = 0;
-    for (let i = start + 1; i <= end; i++) totalEXP += i * 100;
-    document.getElementById('result').innerText = `Tổng EXP từ cấp ${start} → ${end}: ${totalEXP.toLocaleString()} EXP`;
-
-    let books = [
-        {exp: 1000, count: parseInt(document.getElementById('book1000').value)},
-        {exp: 500, count: parseInt(document.getElementById('book500').value)},
-        {exp: 250, count: parseInt(document.getElementById('book250').value)},
-        {exp: 100, count: parseInt(document.getElementById('book100').value)},
-        {exp: 50, count: parseInt(document.getElementById('book50').value)}
-    ];
-
-    let expLeft = totalEXP;
-    let usedBooks = [];
-
-    for (let book of books) {
-        let use = Math.min(Math.floor(expLeft / book.exp), book.count);
-        expLeft -= use * book.exp;
-        usedBooks.push(`${use} cuốn ${book.exp} EXP`);
-    }
-
-    let resultText = `Sử dụng sách:\n` + usedBooks.join(', ');
-    if (expLeft > 0) resultText += `\nCòn thiếu: ${expLeft} EXP`;
-
-    document.getElementById('usedBooks').innerText = resultText;
-}
-
-// === Tính Stats theo Tier ===
-function calcStats() {
-    let dmg = parseFloat(document.getElementById("basicDmg").value);
-    let hp  = parseFloat(document.getElementById("basicHp").value);
-    let level = parseInt(document.getElementById("level").value);
-    if (level < 1) level = 1;
-
-    let multiplier = Math.pow(1 + 0.0125, level - 1); // tăng 1.25%/cấp
-    let basicDmgLevel = Math.round(dmg * multiplier);
-    let basicHpLevel  = Math.round(hp * multiplier);
-
-    let goldDmg    = basicDmgLevel * 4;
-    let goldHp     = basicHpLevel * 4;
-    let rainbowDmg = goldDmg * 4;
-    let rainbowHp  = goldHp * 4;
-    let secretDmg  = rainbowDmg * 4;
-    let secretHp   = rainbowHp * 4;
-
-    document.getElementById("resultStats").innerText =
-`📌 Basic → DMG: ${basicDmgLevel}, HP: ${basicHpLevel}
-✨ Gold → DMG: ${goldDmg}, HP: ${goldHp}
-🌈 Rainbow → DMG: ${rainbowDmg}, HP: ${rainbowHp}
-🔥 Secret → DMG: ${secretDmg}, HP: ${secretHp}`;
-}
-</script>
 
 </body>
 </html>
